@@ -40,7 +40,8 @@ class BubbleNormal extends StatelessWidget {
   final double bubbleRadius;
   final bool isSender;
   final Color color;
-  final String text;
+  final String? text;
+  final TextSpan? textSpan;
   final bool tail;
   final bool sent;
   final bool delivered;
@@ -57,7 +58,8 @@ class BubbleNormal extends StatelessWidget {
 
   BubbleNormal({
     Key? key,
-    required this.text,
+    this.text,
+    this.textSpan,
     this.constraints,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
@@ -77,7 +79,8 @@ class BubbleNormal extends StatelessWidget {
       color: Colors.black87,
       fontSize: 16,
     ),
-  }) : super(key: key);
+  })  : assert((text != null) ^ (textSpan != null), 'Either text or textSpan should be non null'),
+        super(key: key);
 
   ///chat bubble builder method
   @override
@@ -152,8 +155,12 @@ class BubbleNormal extends StatelessWidget {
                     padding: stateTick
                         ? EdgeInsets.fromLTRB(12, 6, 28, 6)
                         : EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                    child: SelectableText(
-                      text,
+                    child: text != null ? SelectableText(
+                      text!,
+                      style: textStyle,
+                      textAlign: TextAlign.left,
+                    ) : SelectableText.rich(
+                      textSpan!,
                       style: textStyle,
                       textAlign: TextAlign.left,
                     ),
